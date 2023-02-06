@@ -38,6 +38,8 @@ public class ClientApp {
                     String[] cookieValArr = response.split("_");
                     System.out.println("Cookie from the server "
                             + cookieValArr[1]);
+                }else{
+                    System.err.println(response);
                 }
 
                 is.close();

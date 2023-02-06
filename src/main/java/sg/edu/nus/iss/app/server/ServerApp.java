@@ -35,6 +35,11 @@ public class ServerApp {
             String cookieResultFile = args[2];
             System.out.println(cookieResultFile);
 
+
+            //Get the mailmerge file
+            String mailmergeFile = args[3];
+            System.out.println(mailmergeFile);
+
             System.out.printf("Cookie Server started at %s\n"
                     , serverPort);
             // Instantiate server socket object pass in the server
@@ -59,7 +64,9 @@ public class ServerApp {
                         String dataFromClient = dis.readUTF();
                         
                         if(dataFromClient.equals("get-cookie")){
-                            String randomCookie = getRandomCookie(cookieFile, cookieResultFile);
+                            String randomCookie = getRandomCookie(cookieFile, 
+                                        cookieResultFile,
+                                        mailmergeFile);
                             dos.writeUTF("cookie-text_" + randomCookie);
                         }else{
                             dos.writeUTF("Invalid command !");
