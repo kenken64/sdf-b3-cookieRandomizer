@@ -109,7 +109,7 @@ public class Cookie {
         filewriter.close();
     }
 
-    private static List<String> getDataFromText(String filepath) throws IOException{
+    public static List<String> getDataFromText(String filepath) throws IOException{
         BufferedReader br = new BufferedReader(new FileReader(filepath));
 
         List<String> lists = new LinkedList<>();
