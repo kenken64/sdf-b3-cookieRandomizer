@@ -15,34 +15,35 @@ public class ClientApp {
         System.out.println(arrSplit[0]);
         System.out.println(arrSplit[1]);
         try{
-            Socket sock = new Socket(arrSplit[0]
+            while(true){
+                Socket sock = new Socket(arrSplit[0]
                     , Integer.parseInt(arrSplit[1]));
             
-            InputStream is = sock.getInputStream();
-            DataInputStream dis = new DataInputStream(is);
+                InputStream is = sock.getInputStream();
+                DataInputStream dis = new DataInputStream(is);
 
-            OutputStream os = sock.getOutputStream();
-            DataOutputStream dos = new DataOutputStream(os);
+                OutputStream os = sock.getOutputStream();
+                DataOutputStream dos = new DataOutputStream(os);
+                
+                Console cons = System.console();
+                String input = 
+                        cons.readLine("Send command to the random cookie "+
+                        "server ? ");
 
-            Console cons = System.console();
-            String input = 
-                    cons.readLine("Send command to the random cookie "+
-                    "server ? ");
+                dos.writeUTF(input);
+                dos.flush();
 
-            dos.writeUTF(input);
-            dos.flush();
+                String response = dis.readUTF();
+                if(response.contains("cookie-text")){
+                    String[] cookieValArr = response.split("_");
+                    System.out.println("Cookie from the server "
+                            + cookieValArr[1]);
+                }
 
-            String response = dis.readUTF();
-            if(response.contains("cookie-text")){
-                String[] cookieValArr = response.split("_");
-                System.out.println("Cookie from the server "
-                        + cookieValArr[1]);
+                is.close();
+                os.close();
+                sock.close();
             }
-
-            is.close();
-            os.close();
-            sock.close();
-        
         }catch(UnknownHostException e){
             e.printStackTrace();
         }catch(NumberFormatException e){

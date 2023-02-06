@@ -2,11 +2,15 @@ package sg.edu.nus.iss.app.server;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.LinkedList;
+import java.util.List;
+
 import static sg.edu.nus.iss.app.server.Cookie.*;
 
 public class ServerApp {
@@ -27,45 +31,59 @@ public class ServerApp {
             String cookieFile = args[1];
             System.out.println(cookieFile);
 
+            //Get the cookie result file
+            String cookieResultFile = args[2];
+            System.out.println(cookieResultFile);
+
             System.out.printf("Cookie Server started at %s\n"
                     , serverPort);
             // Instantiate server socket object pass in the server
             ServerSocket server = 
                     new ServerSocket(Integer.parseInt(serverPort)); 
+            while(true){
+                // Client connect to the server ... this is the line where 
+                // the server accept a connection from the client
+                sock = server.accept(); 
+                
+                // Get the input data from the client program in byte
+                is = sock.getInputStream();
+                DataInputStream dis= new DataInputStream(is);
 
-            // Client connect to the server ... this is the line where 
-            // the server accept a connection from the client
-            sock = server.accept(); 
-            
-            // Get the input data from the client program in byte
-            is = sock.getInputStream();
-            DataInputStream dis= new DataInputStream(is);
+                // Write and response
+                os = sock.getOutputStream();
+                DataOutputStream dos = new DataOutputStream(os);
 
-            // Write and response
-            os = sock.getOutputStream();
-            DataOutputStream dos = new DataOutputStream(os);
-
-            // reading data stream assign to a variable where data is String
-            
-            String dataFromClient = dis.readUTF();
-            if(dataFromClient.equals("get-cookie")){
-                String randomCookie = getRandomCookie(cookieFile);
-                dos.writeUTF("cookie-text_" + randomCookie);
-            }else{
-                dos.writeUTF("Invalid command !");
+                // reading data stream assign to a variable where data is String
+                while(true){
+                    try{
+                        String dataFromClient = dis.readUTF();
+                        
+                        if(dataFromClient.equals("get-cookie")){
+                            String randomCookie = getRandomCookie(cookieFile, cookieResultFile);
+                            dos.writeUTF("cookie-text_" + randomCookie);
+                        }else{
+                            dos.writeUTF("Invalid command !");
+                        }
+                    }catch (EOFException e) {
+                        System.out.println("Client disconnected");
+                        sock.close();
+                        break;
+                    }   
+                }
             }
-
-            // Release resources from input/output stream and 
-            // socket connection.
-            is.close();
-            os.close();
-            sock.close();
+        
         }catch(ArrayIndexOutOfBoundsException e){
             // validate arguments array must be more than 1 arg value
             System.out.println(ARG_MESSAGE);
             System.exit(1);
         }catch(IOException e){
             e.printStackTrace();
+        }finally {
+            try {
+                sock.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         
     }
