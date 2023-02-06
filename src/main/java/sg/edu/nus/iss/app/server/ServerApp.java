@@ -15,6 +15,10 @@ public class ServerApp {
         + " <port no>" + " <cookie file>";
     public static void main( String[] args )
     {
+        Socket sock = null;
+        InputStream is = null;
+        OutputStream os = null;
+
         try{
             // Get server port from java cli first argument
             String serverPort = args[0];
@@ -31,21 +35,22 @@ public class ServerApp {
 
             // Client connect to the server ... this is the line where 
             // the server accept a connection from the client
-            Socket sock = server.accept(); 
+            sock = server.accept(); 
             
             // Get the input data from the client program in byte
-            InputStream is = sock.getInputStream();
+            is = sock.getInputStream();
             DataInputStream dis= new DataInputStream(is);
 
             // Write and response
-            OutputStream os = sock.getOutputStream();
+            os = sock.getOutputStream();
             DataOutputStream dos = new DataOutputStream(os);
 
             // reading data stream assign to a variable where data is String
+            
             String dataFromClient = dis.readUTF();
             if(dataFromClient.equals("get-cookie")){
                 String randomCookie = getRandomCookie(cookieFile);
-                dos.writeUTF("cookie-text " + randomCookie);
+                dos.writeUTF("cookie-text_" + randomCookie);
             }else{
                 dos.writeUTF("Invalid command !");
             }

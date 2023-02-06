@@ -34,9 +34,9 @@ public class ClientApp {
 
             String response = dis.readUTF();
             if(response.contains("cookie-text")){
-                String[] cookieValArr = response.split(" ");
-                System.out.printf("Cookie from the server %s"
-                        , cookieValArr[1]);
+                String[] cookieValArr = response.split("_");
+                System.out.println("Cookie from the server "
+                        + cookieValArr[1]);
             }
 
             is.close();
