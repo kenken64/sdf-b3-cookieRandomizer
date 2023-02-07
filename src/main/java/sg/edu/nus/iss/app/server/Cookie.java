@@ -25,15 +25,20 @@ public class Cookie {
             cookies = getDataFromText(path);
             cookiesResult = getDataFromText(resultPath);
             System.out.println(cookiesResult.size());
-            if(cookiesResult.size() == 0)
+            if(cookiesResult.size() == 0){
+                System.out.println("init result file ...");
+                for(int x = 0; x < cookies.size(); x++){
+                    cookiesResult.add("");
+                }
                 initCookieResultFile(resultPath, cookies.size());
+            }
+                
             Random rand = new Random();
             int randVal = rand.nextInt(cookies.size());
             System.out.println(randVal);
             randomCookie = cookies.get(randVal);
             
             if(mailMergePath != null ){
-                System.out.println("!!!!!mailMergePath " );
                 int charSizeOFRandom = randomCookie.length();
                 String mailMergePara = readMailMergeText(mailMergePath);
                 mailMergePara = mailMergePara.replaceAll("\\$count\\b", String.valueOf(charSizeOFRandom));
@@ -94,8 +99,9 @@ public class Cookie {
             String cookieName, int cookieNameIndex, 
             List<String>cookiesResult,
             String resultPath) throws IOException{
+        System.out.println( "cookiesResult >>> " +cookiesResult);
         if(!cookiesResult.contains(cookieName))
-            cookiesResult.set(cookieNameIndex, cookieName);
+                cookiesResult.set(cookieNameIndex, cookieName);
         System.out.println(cookiesResult);
         PrintWriter writer = new PrintWriter(resultPath);
         writer.print("");
@@ -118,12 +124,6 @@ public class Cookie {
         while ((line = br.readLine()) != null) {
             lists.add(line);         
         }
-
-        // prints the list of linked lists
-        for (String list : lists) {
-            System.out.println(list);
-        }
-
         return lists;
     }
 }

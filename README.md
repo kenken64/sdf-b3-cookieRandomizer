@@ -19,3 +19,7 @@ Note: These passages are excerpted from actual student papers and retain the ori
 Thanks to the $count who provided their writing for this page of our website. Do you have a discussion post, paper, or other writing assignment that you are particularly proud of? 
 
 ```
+
+```
+java -cp target/workshop4-1.0-SNAPSHOT.jar sg.edu.nus.iss.app.server.ServerApp 3000 /Users/kennethphang/Projects/workshop4/ cookies_file.txt cookies_result_file.txt cookie_name_count.txt
+```
